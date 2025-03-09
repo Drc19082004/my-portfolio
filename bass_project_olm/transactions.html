@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Online Library Management System</title>
+    <link rel="stylesheet" href="transactions.css">
+    <style>
+        .highlight {
+            background-color: #ffff99;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Home</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="borrower-list">
+            <h2>Borrower List</h2>
+            <input type="text" id="search-borrower" placeholder="Search by Name or Book ID">
+            <button id="search-borrower-btn">Search</button>
+            <table id="borrowers-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Book ID</th> <!-- Added book title -->
+                        <th>Number of copies</th>
+                        <th>Mobile Number</th>
+                        <th>Date and Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="add-borrower-btn">Add Borrower</button>
+        </section>
+        
+        <section id="book-list">
+            <h2>Book List</h2>
+            <button id="add-book-btn">Add Book</button>
+            <table id="books-table">
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Available</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const borrowersTableBody = document.querySelector('#borrowers-table tbody');
+            const booksTableBody = document.querySelector('#books-table tbody');
+        
+            function loadBorrowers(filter = '') {
+                const borrowers = JSON.parse(localStorage.getItem('borrowers')) || [];
+                borrowersTableBody.innerHTML = '';
+        
+                borrowers.forEach((borrower, index) => {
+                    if (filter && !borrower.name.toLowerCase().includes(filter.toLowerCase()) && !borrower.id.includes(filter)) {
+                        return;
+                    }
+        
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${borrower.name}</td>
+                        <td>${borrower.id}</td>
+                        <td>${borrower.copies}</td>
+                        <td>${borrower.mobile}</td>
+                        <td>${borrower.datetime}</td>
+                        <td><button class="remove-btn" data-index="${index}">Return</button></td>
+                    `;
+                    borrowersTableBody.appendChild(row);
+                });
+        
+                document.querySelectorAll('.remove-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        removeBorrower(e.target.getAttribute('data-index'));
+                    });
+                });
+            }
+        
+            function saveBorrowers(borrowers) {
+                localStorage.setItem('borrowers', JSON.stringify(borrowers));
+            }
+        
+            function removeBorrower(index) {
+                let borrowers = JSON.parse(localStorage.getItem('borrowers')) || [];
+                let books = JSON.parse(localStorage.getItem('books')) || [];
+        
+                const bookId = borrowers[index].id;
+                const copiesReturned = borrowers[index].copies;
+        
+                const bookIndex = books.findIndex(book => book.id === bookId);
+                if (bookIndex !== -1) {
+                    books[bookIndex].copies += copiesReturned;
+                    saveBooks(books);
+                }
+        
+                borrowers.splice(index, 1);
+                saveBorrowers(borrowers);
+                loadBorrowers();
+                loadBooks();
+            }
+        
+            function loadBooks() {
+                const books = JSON.parse(localStorage.getItem('books')) || [];
+                booksTableBody.innerHTML = '';
+        
+                books.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${book.id}</td>
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.category}</td>
+                        <td>${book.copies}</td>
+                    `;
+                    booksTableBody.appendChild(row);
+                });
+            }
+        
+            function saveBooks(books) {
+                localStorage.setItem('books', JSON.stringify(books));
+            }
+        
+            document.getElementById('add-borrower-btn').addEventListener('click', () => {
+                const name = prompt('Enter Borrower Name:');
+                const bookId = prompt('Enter Book ID:');
+                const copiesToBorrow = parseInt(prompt('Enter Number of Copies:'), 10);
+                const mobile = prompt('Enter Borrower Mobile Number:');
+        
+                if (!name || !bookId || isNaN(copiesToBorrow) || copiesToBorrow <= 0 || !mobile) {
+                    alert("Invalid input. Please fill all fields correctly.");
+                    return;
+                }
+        
+                let books = JSON.parse(localStorage.getItem('books')) || [];
+                const bookIndex = books.findIndex(book => book.id === bookId);
+        
+                if (bookIndex === -1) {
+                    alert("Book not found!");
+                    return;
+                }
+        
+                if (books[bookIndex].copies < copiesToBorrow) {
+                    alert("Not enough copies available!");
+                    return;
+                }
+        
+                books[bookIndex].copies -= copiesToBorrow;
+                saveBooks(books);
+        
+                const newBorrower = {
+                    name,
+                    id: bookId,
+                    copies: copiesToBorrow,
+                    mobile,
+                    datetime: new Date().toLocaleString()
+                };
+        
+                let borrowers = JSON.parse(localStorage.getItem('borrowers')) || [];
+                borrowers.push(newBorrower);
+                saveBorrowers(borrowers);
+                loadBorrowers();
+                loadBooks();
+            });
+        
+            document.getElementById('search-borrower-btn').addEventListener('click', () => {
+                const searchTerm = document.getElementById('search-borrower').value.trim();
+                loadBorrowers(searchTerm);
+            });
+        
+            document.getElementById('add-book-btn').addEventListener('click', () => {
+                const bookId = prompt('Enter Book ID:');
+                const title = prompt('Enter Book Title:');
+                const author = prompt('Enter Author Name:');
+                const category = prompt('Enter Book Category:');
+                const copies = parseInt(prompt('Enter Number of Copies:'), 10);
+        
+                if (bookId && title && author && category && !isNaN(copies) && copies > 0) {
+                    const newBook = { id: bookId, title, author, category, copies };
+                    let books = JSON.parse(localStorage.getItem('books')) || [];
+                    books.push(newBook);
+                    saveBooks(books);
+                    loadBooks();
+                }
+            });
+        
+            loadBorrowers();
+            loadBooks();
+        });
+        
+        
+    </script>
+</body>
+</html>
