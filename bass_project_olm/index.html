@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GASCMTP</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f3f4f6, #ffffff);
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        header img {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 110px;
+            height: auto;
+        }
+
+        header .left-img {
+            left: 50px;
+        }
+
+        header .right-img {
+            right: 20px;
+        }
+
+        header h2 {
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #6a11cb;
+        }
+
+        .hero {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f3f4f6;
+        }
+
+        .scrolling-images {
+            display: flex;
+            width: max-content; /* Allow infinite scrolling */
+            animation: scrollImages 15s linear infinite;
+        }
+
+        .scrolling-images img {
+            height: 100%;
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        @keyframes scrollImages {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        #news {
+            background: #f8f9fa;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #news p {
+            white-space: nowrap;
+            animation: marquee 10s linear infinite;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background: #6a11cb;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #2575fc;
+        }
+        img{
+            border-radius: 10px;
+            margin-left: 2%;
+        }
+        img:hover{
+            box-shadow: 0px 0px 10px aqua;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://www.static-contents.youth4work.com/university/Documents/Colleges/collegeLogo/20230322164307.png?v=20230322164307" alt="Left Image" class="left-img">
+        <h2>Government Arts and Science College, Mettupalayam<br>Affiliated to Bharathiar University</h2>
+        <img src="https://imagesvs.oneindia.com/ph-big/2021/07/rare-photos-of-karmaveerar-kamarajar-during-his-119th-birthday-anniversary_162632943230.jpg" alt="Right Image" class="right-img">
+    </header>
+    <form action="register.php" method="post">
+    <nav>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <ul>
+            <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="books.html"><i class="fas fa-book"></i> Books</a></li>
+            <li><a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        
+    </nav>
+    <div class="hero">
+        <div class="scrolling-images">
+            <img src="images/download (1).jpg" alt="Image 1">
+            <img src="images/download (2).jpg" alt="Image 2">
+            <img src="images\download.jpg" alt="Image 3">
+            <img src="images\OIP (1).jpg" alt="Image 4">
+            <img src="images\OIP.jpg" alt="Image 5">
+            <img src="images\download (2).jpg" alt="Image 1 Duplicate"> <!-- Duplicate for seamless loop -->
+            <img src="images\OIP.jpg"alt="Image 2 Duplicate"> <!-- Duplicate for seamless loop -->
+        </div>
+    </div>
+    <section id="news">
+        <p>Latest Updates: New arrivals in fiction, science, and more! Explore today!</p>
+    </section>
+    <main>
+        <!-- Removed Search Bar and Borrower Section -->
+    </main>
+    <footer>
+        <p>Government arts and science collage mettupalayam</p>
+    </footer>
+</body>
+</html>
